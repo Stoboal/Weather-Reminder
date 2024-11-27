@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Weather Reminder{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1 class="my-3">Weather Reminder</h1>
+    </div>
+</header>
+<main class="flex-grow-1 py-4">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<footer class="mt-auto py-3">
+    <div class="container">
+        <p class="mb-0">&copy; Weather Reminder</p>
+    </div>
+</footer>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

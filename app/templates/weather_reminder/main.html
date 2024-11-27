@@ -1,0 +1,109 @@
+{% extends "weather_reminder/base.html" %}
+{% block title %}My Subscriptions{% endblock %}
+{% block content %}
+    <div>
+        <h2>Hello, {{ user.username }}</h2>
+        <h2>You have {{ subscriptions|length }}/5 subscriptions:</h2>
+        {% if subscriptions %}
+            <table>
+                <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Location</th>
+                    <th>Period</th>
+                    <th>Temperature</th>
+                    <th>Precipitation</th>
+                    <th>Humidity</th>
+                    <th>Wind</th>
+                    <th>Wind Speed</th>
+                    <th>Is Active</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for subscription in subscriptions %}
+                    <tr>
+                        <td>
+                            <b style="text-transform: capitalize">{{ subscription.city.name }}</b>
+                            <p>
+                                <button type="button"
+                                        onclick="window.location.href='{% url 'get_weather' subscription.id %}'">
+                                    Get Weather
+                                </button>
+                        </td>
+                        <td>
+                            <p>{{ subscription.city.latitude }}</p>
+                            <p>{{ subscription.city.longitude }}</p>
+                        </td>
+                        <td>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="subscription_id" value="{{ subscription.id }}">
+                                <input type="number" name="period" value="{{ subscription.period }}" min="1">
+                                <button type="submit" name="change_period">Change</button>
+                            </form>
+                        </td>
+                        <td>{{ subscription.temperature }}</td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'change_attr' subscription.id 'precipitation' %}'"
+                                    class="button">{{ subscription.precipitation }}</button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'change_attr' subscription.id 'humidity' %}'"
+                                    class="button">{{ subscription.humidity }}</button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'change_attr' subscription.id 'wind' %}'"
+                                    class="button">{{ subscription.wind }}</button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'change_attr' subscription.id 'wind_speed' %}'"
+                                    class="button">{{ subscription.wind_speed }}</button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'change_attr' subscription.id 'is_active' %}'"
+                                    class="button">{{ subscription.is_active }}</button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    onclick="window.location.href='{% url 'delete_subscription' subscription.id %}'"
+                                    class="button">Delete
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    <div>
+        <button type="button" onclick="hideButton()" class="button">Create Subscription</button>
+        <div id="forms" style="display: none;">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="create_subscription" value="true">
+                {{ form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <button onclick="window.location.href='{% url 'logout' %}'" class="button">Logout</button>
+    </div>
+
+    <script>
+        function hideButton() {
+            var x = document.getElementById("forms");
+            if (x.style.display === "none" || x.style.display === "") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+{% endblock %}
